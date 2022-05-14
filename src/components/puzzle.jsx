@@ -13,9 +13,9 @@ class Puzzle extends React.Component {
         console.log("Clicked Display");
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
-        const img = new Image();
+        var img = new Image();
         // img.src = "https://picsum.photos/200/300";
-        img.src = require("../images/img2.jpg");
+        img.src = require("../images/nature.jpg");
 
         img.onload = () => {
             ctx.drawImage(img, 0, 0);
@@ -46,6 +46,7 @@ class Puzzle extends React.Component {
         // shuffle puzzle pieces
         initialArray.sort( () => Math.random() - 0.5);
 
+        // update state
         this.setState({array: initialArray});
 
         console.log(initialArray);
@@ -58,9 +59,95 @@ class Puzzle extends React.Component {
         let x, y, newX, newY;
 
         // render shuffled puzzle on canvas
-        for (let i = 0; i < this.state.numOfPieces; i++) {
-            x = initialArray[i] % this.state.width;
-            y = initialArray[i] / this.state.width;
+        // for (let i = 0; i < this.state.numOfPieces; i++) {
+        //     x = initialArray[i] % this.state.width;
+        //     y = initialArray[i] / this.state.width;
+
+        //     newX = i % this.state.width;
+        //     newY = i / this.state.width;
+
+        //     var imgData = ctx.getImageData(x, y, 1, 1);
+        //     ctx2.putImageData(imgData, newX, newY);
+        // }
+
+        // animated shuffle
+        let count = 0;
+        let max = this.state.numOfPieces;
+        let width = this.state.width;
+        const id = setInterval(drawPiece, 10);
+        function drawPiece() {
+            if ( count < max-1 ) {
+                for (let i = 0; i < width; i++) {
+                    x = initialArray[count] % width;
+                    y = initialArray[count] / width;
+
+                    newX = count % width;
+                    newY = count / width;
+
+                    var imgData = ctx.getImageData(x, y, 1, 1);
+                    ctx2.putImageData(imgData, newX, newY);
+
+                    count++;
+                }
+                
+            } else {
+                clearInterval(id);
+            }
+        }
+    };
+
+    handleSort = () => {
+        console.log("Clicked Sort");
+        
+        let array = this.state.array;
+        let numOfPieces = this.state.numOfPieces;
+
+        quicksort(array, 0, numOfPieces-1);
+
+        // helper that picks a pivot and sorts other elements
+        function partition(array, low, high) {
+            let pivot = array[high];
+
+            let position = low - 1;
+
+            for (let i = low; i <= high - 1; i++) {
+                if (array[i] < pivot) {
+                    position++;
+
+                    // swap
+                    [array[i], array[position]] = [array[position], array[i]];
+                }
+            }
+
+            [array[high], array[position + 1]] = [array[position + 1], array[high]];
+
+            return position + 1;
+        }
+
+        // do quicksort
+        function quicksort(array, low, high) {
+            if (low < high) {
+                let pivot = partition(array, low, high);
+
+                quicksort(array, low, pivot - 1);
+                quicksort(array, pivot + 1, high);
+
+            }
+        };
+
+        console.log(array);
+
+        let c = document.getElementById("myCanvas");
+        let ctx = c.getContext("2d");
+        let c2 = document.getElementById("myCanvas2");
+        let ctx2 = c2.getContext("2d");
+
+        let x, y, newX, newY;
+
+        // render shuffled puzzle on canvas
+        for (let i = 0; i < numOfPieces; i++) {
+            x = array[i] % this.state.width;
+            y = array[i] / this.state.width;
 
             newX = i % this.state.width;
             newY = i / this.state.width;
@@ -68,10 +155,7 @@ class Puzzle extends React.Component {
             var imgData = ctx.getImageData(x, y, 1, 1);
             ctx2.putImageData(imgData, newX, newY);
         }
-    };
 
-    handleSort = () => {
-        console.log("Clicked Sort");
     };
 
     render() {
@@ -84,10 +168,10 @@ class Puzzle extends React.Component {
                 <h5>Height: {this.state.height}</h5>
                 <h5>Number of Pieces: {this.state.numOfPieces}</h5>
                 <div className="canvas-container">
-                    <canvas id="myCanvas2" width="500" height="200" 
+                    <canvas id="myCanvas2" width="500" height="500" 
                             style={{border: '2px solid #000',
                                     backgroundColor: 'white'}}></canvas> 
-                    <canvas id="myCanvas" width="500" height="200" 
+                    <canvas id="myCanvas" width="500" height="500" 
                         style={{border: '2px solid #000',
                                 backgroundColor: 'white'}}></canvas>
                           
