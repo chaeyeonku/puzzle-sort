@@ -9,6 +9,7 @@ class Puzzle extends React.Component {
         array: []
     };
 
+    /**  Puts the original image on the canvas */
     handleDisplay = () => {
         console.log("Clicked Display");
         let c = document.getElementById("myCanvas");
@@ -17,18 +18,20 @@ class Puzzle extends React.Component {
         // img.src = "https://picsum.photos/200/300";
         img.src = require("../images/nature.jpg");
 
+        // wait for the image to load first
         img.onload = () => {
             ctx.drawImage(img, 0, 0);
 
             // initialize puzzle information
             this.setState(
                 {width: img.width, height: img.height, 
-                    numOfPieces: 16}
+                    numOfPieces: img.width * img.height}
             );
         };
 
     };
 
+    /** Shuffles the picture puzzle */
     handleShuffle = () => {
         console.log("Clicked Shuffle");
 
@@ -41,7 +44,8 @@ class Puzzle extends React.Component {
         let initialArray = [];
 
         // create an array of number from 0 - numOfPieces - 1
-        for (let i = 0; i < this.state.numOfPieces; i++) {
+        // for (let i = 0; i < this.state.numOfPieces; i++) {
+        for (let i = 0; i < 16; i++) {
             initialArray[i] = i;
         }
 
@@ -66,13 +70,14 @@ class Puzzle extends React.Component {
         let width = this.state.width;
         const id = setInterval(drawPiece, 10);
         function drawPiece() {
-            if ( count < max-1 ) {
+            // if ( count < max-1 ) {
+            if ( count < 16 ) {
                 for (let i = 0; i < width / 64; i++) {
-                    x = initialArray[count] % width * 64;
-                    y = initialArray[count] / width * 64;
+                    x = (initialArray[count] * 64) % width;
+                    y = Math.floor((initialArray[count] * 64) / width) * 64;
 
-                    newX = count % width * 64;
-                    newY = count / width / 64;
+                    newX = (count * 64) % width;
+                    newY = Math.floor((count * 64) / width) * 64;
 
                     var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
                     ctx2.putImageData(imgData, newX, newY);
@@ -87,8 +92,11 @@ class Puzzle extends React.Component {
 
     };
 
+    /** Quicksorts the picture puzzle */
     handleSort = () => {
         console.log("Clicked Sort");
+
+        let sizeOfPiece = 64;
         
         let array = this.state.array;
         let width = this.state.width;
@@ -100,7 +108,8 @@ class Puzzle extends React.Component {
         let ctx2 = c2.getContext("2d");
 
         let low = 0;
-        let high = numOfPieces - 1;
+        let high = array.length - 1;
+        // let high = numOfPieces - 1;
         let pivotIdx = -1;
 
         // initial call to quicksort
@@ -108,8 +117,10 @@ class Puzzle extends React.Component {
 
         // helper handling recursive calls to quicksort
         function recursiveQuickSort() {
-            quicksort(array, low, pivotIdx - 1);
-            quicksort(array, pivotIdx + 1, high);
+            quicksort(array, low, pivotIdx - 1)
+            .then( () => {
+                quicksort(array, pivotIdx + 1, high)
+            });
         }
 
         // helper that picks a pivot and sorts other elements
@@ -135,24 +146,23 @@ class Puzzle extends React.Component {
         // do quicksort
         function quicksort(array, low, high) {
 
-            if (low < high) {
-                pivotIdx = partition(array, low, high);
-                // let pivot = partition(array, low, high);
+            return new Promise((resolve) => {
+                if (low < high) {
 
-                // update canvas
-                drawCurrentPuzzle();
-                window.requestAnimationFrame(recursiveQuickSort);
-                // quicksort(array, low, pivot - 1);
-                // quicksort(array, pivot + 1, high);
+                    // partition the array and get pivot index
+                    pivotIdx = partition(array, low, high);
+    
+                    // update canvas first
+                    drawCurrentPuzzle();
 
-                // drawCurrentPuzzle()
-                // .then(quicksort(array, low, pivot - 1))
-                // .then(quicksort(array, pivot + 1, high));
-
-                // quicksort(array, low, pivot - 1)
-                // .then(quicksort(array, pivot + 1, high));
-
-            }
+                    // do recursive calls to quicksort
+                    window.requestAnimationFrame(recursiveQuickSort);
+    
+                } else {
+                    // resolve the promise since there's nothing left to sort
+                    resolve();
+                }
+            });
 
             
         };
@@ -161,20 +171,36 @@ class Puzzle extends React.Component {
         function drawCurrentPuzzle() {
             let x, y, newX, newY;
 
-            for (let i = 0; i < numOfPieces; i++) {
-                x = array[i] % width;
-                y = array[i] / width;
+            // for (let i = 0; i < numOfPieces; i++) {
+            for (let i = 0; i < 16; i++) {
+                x = (array[i] * 64) % width;
+                y = Math.floor((array[i] * 64) / width) * 64;
     
-                newX = i % width;
-                newY = i / width;
-    
-                var imgData = ctx.getImageData(x, y, 1, 1);
+                newX = (i * 64) % width;
+                // newY = i / width;
+                newY = Math.floor((i * 64) / width) * 64;
+
+                var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
                 ctx2.putImageData(imgData, newX, newY);
             }
             
         }
 
         console.log(array);
+
+        // let x, y, newX, newY;
+
+        // for (let i = 0; i < 16; i++) {
+        //     x = (array[i] * 64) % width;
+        //     y = Math.floor((array[i] * 64) / width) * 64;
+
+        //     newX = (i * 64) % width;
+        //     // newY = i / width;
+        //     newY = Math.floor((i * 64) / width) * 64;
+
+        //     var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
+        //     ctx2.putImageData(imgData, newX, newY);
+        // }
 
         // let c = document.getElementById("myCanvas");
         // let ctx = c.getContext("2d");
@@ -200,12 +226,12 @@ class Puzzle extends React.Component {
     render() {
         return (
             <div className="container">
-                <button onClick={this.handleDisplay}>Display</button>
-                <button onClick={this.handleShuffle}>Shuffle</button>
-                <button onClick={this.handleSort}>Sort</button>
-                <h5>Width: {this.state.width}</h5>
-                <h5>Height: {this.state.height}</h5>
-                <h5>Number of Pieces: {this.state.numOfPieces}</h5>
+                <button className="btn btn-light" onClick={this.handleDisplay}>Display</button>
+                <button className="btn btn-danger" onClick={this.handleShuffle}>Shuffle</button>
+                <button className="btn btn-info" onClick={this.handleSort}>Sort</button>
+                
+                <li>Dimension: {this.state.width} x {this.state.height}</li>
+                <li>Number of Pieces: {this.state.numOfPieces}</li>
                 <div className="canvas-container">
                     <canvas id="myCanvas2" width="500" height="500" 
                             style={{border: '2px solid #000',
@@ -221,37 +247,6 @@ class Puzzle extends React.Component {
     }
 
     
-}
-
-// gradient puzzle 
-export function displayPuzzles() {
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    const array = [];
-    // initialize random array
-    for (let i = 0; i < 100; i++) {
-        array[i] = i;
-    }
-
-    array.sort( () => Math.random() - 0.5);
-
-    console.log(array);
-
-    for (let i = 0; i < 100; i++) {
-        ctx.fillStyle = `rgba(166, 193, 238, ${array[i] * 0.01})`;
-        ctx.fillRect( i*5, 0, 5, 90);
-        ctx.fillStyle = `rgba(250, 217, 234, ${array[i] * 0.01})`;
-        ctx.fillRect( i*5, 90, 5, 90);
-    }
-}
-
-export function displayPicture() {
-    let c = document.getElementById("myCanvas");
-    let ctx = c.getContext("2d");
-    const img = new Image();
-    // img.src = "https://picsum.photos/200/300";
-    img.src = require("../images/img2.jpg");
-    img.onload = function () {ctx.drawImage(img, 0, 0)};
 }
 
 export default Puzzle;

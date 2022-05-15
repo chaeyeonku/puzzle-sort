@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: "Tahoma";
 }
 
 .App-logo {
@@ -29,6 +30,11 @@
 
 .puzzle-container {
   display: flex;
+  
+}
+
+.container {
+  font-size: 12px;
 }
 
 canvas {
