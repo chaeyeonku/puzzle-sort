@@ -1,6 +1,18 @@
-# Getting Started with Create React App
+# Picture Puzzle Sort Visualization
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project applies sorting algorithms to solve picture puzzles and visualizes the process.
+
+UPDATE:
+
+- As of May 16, 2022, the project is still in progress.
+- Only QuickSort algorithm is used and available at the moment.
+- Current demo of project is available here: [https://chaeyeonku.github.io/puzzle-sort-visualized/](https://chaeyeonku.github.io/puzzle-sort-visualized/)
+
+Ultimately, the project aims to achieve the following:
+
+1. Allow users choose the complexity of puzzle (e.g. number of Pieces: 4x4, 50x50)
+2. Allow users to drag and drop a picture to be used for puzzle
+3. Implement other sorting algorithms to enrich the user experience
 
 ## Available Scripts
 
