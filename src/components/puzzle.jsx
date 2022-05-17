@@ -186,40 +186,7 @@ class Puzzle extends React.Component {
             
         }
 
-        console.log(array);
-
-        // let x, y, newX, newY;
-
-        // for (let i = 0; i < 16; i++) {
-        //     x = (array[i] * 64) % width;
-        //     y = Math.floor((array[i] * 64) / width) * 64;
-
-        //     newX = (i * 64) % width;
-        //     // newY = i / width;
-        //     newY = Math.floor((i * 64) / width) * 64;
-
-        //     var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
-        //     ctx2.putImageData(imgData, newX, newY);
-        // }
-
-        // let c = document.getElementById("myCanvas");
-        // let ctx = c.getContext("2d");
-        // let c2 = document.getElementById("myCanvas2");
-        // let ctx2 = c2.getContext("2d");
-
-        // let x, y, newX, newY;
-
-        // // sorted puzzle
-        // for (let i = 0; i < numOfPieces; i++) {
-        //     x = array[i] % this.state.width;
-        //     y = array[i] / this.state.width;
-
-        //     newX = i % this.state.width;
-        //     newY = i / this.state.width;
-
-        //     var imgData = ctx.getImageData(x, y, 1, 1);
-        //     ctx2.putImageData(imgData, newX, newY);
-        // }
+        // console.log(array);
 
     };
 
