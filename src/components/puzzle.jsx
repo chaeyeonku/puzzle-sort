@@ -6,28 +6,40 @@ class Puzzle extends React.Component {
         width: 0,
         height: 0,
         numOfPieces: 0,
+        sizeofPiece: 0,
+        shuffleDisabled: true,
+        sortDisabled: true,
         array: []
     };
 
     /**  Puts the original image on the canvas */
     handleDisplay = () => {
         console.log("Clicked Display");
+
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         var img = new Image();
         // img.src = "https://picsum.photos/200/300";
-        img.src = require("../images/nature.jpg");
+        img.src = require("../images/image.jpg");
 
         // wait for the image to load first
         img.onload = () => {
-            ctx.drawImage(img, 0, 0);
+
+            // draw the image scaled to 512 x 512 dimension
+            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 512, 512);
 
             // initialize puzzle information
             this.setState(
-                {width: img.width, height: img.height, 
-                    numOfPieces: img.width * img.height}
+                {width: 512, height: 512, sizeOfPiece: 64}
             );
+
+            // set number of pieces
+            let totalPieces = Math.pow((512 / 64), 2);
+            this.setState({numOfPieces: totalPieces});
         };
+
+        // enable shuffle button
+        this.setState({shuffleDisabled: false});
 
     };
 
@@ -35,7 +47,9 @@ class Puzzle extends React.Component {
     handleShuffle = () => {
         console.log("Clicked Shuffle");
 
-        let sizeOfPiece = 64;
+        // get puzzle details
+        let numOfPieces = this.state.numOfPieces;
+        let sizeOfPiece = this.state.sizeOfPiece;
 
         // hide original canvas
         var origCanvas = document.getElementById("myCanvas");
@@ -44,8 +58,8 @@ class Puzzle extends React.Component {
         let initialArray = [];
 
         // create an array of number from 0 - numOfPieces - 1
-        // for (let i = 0; i < this.state.numOfPieces; i++) {
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < numOfPieces; i++) {
+        // for (let i = 0; i < 16; i++) {
             initialArray[i] = i;
         }
 
@@ -66,18 +80,17 @@ class Puzzle extends React.Component {
 
         // animated shuffle
         let count = 0;
-        let max = this.state.numOfPieces;
+        // let max = this.state.numOfPieces;
         let width = this.state.width;
         const id = setInterval(drawPiece, 10);
         function drawPiece() {
-            // if ( count < max-1 ) {
-            if ( count < 16 ) {
-                for (let i = 0; i < width / 64; i++) {
-                    x = (initialArray[count] * 64) % width;
-                    y = Math.floor((initialArray[count] * 64) / width) * 64;
+            if ( count < numOfPieces ) {
+                for (let i = 0; i < width / sizeOfPiece; i++) {
+                    x = (initialArray[count] * sizeOfPiece) % width;
+                    y = Math.floor((initialArray[count] * sizeOfPiece) / width) * sizeOfPiece;
 
-                    newX = (count * 64) % width;
-                    newY = Math.floor((count * 64) / width) * 64;
+                    newX = (count * sizeOfPiece) % width;
+                    newY = Math.floor((count * sizeOfPiece) / width) * sizeOfPiece;
 
                     var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
                     ctx2.putImageData(imgData, newX, newY);
@@ -90,14 +103,17 @@ class Puzzle extends React.Component {
             }
         }
 
+        // enable sort button
+        this.setState({sortDisabled: false});
+
     };
 
     /** Quicksorts the picture puzzle */
     handleSort = () => {
         console.log("Clicked Sort");
 
-        let sizeOfPiece = 64;
-        
+        // get puzzle details
+        let sizeOfPiece = this.state.sizeOfPiece;
         let array = this.state.array;
         let width = this.state.width;
         let numOfPieces = this.state.numOfPieces;
@@ -109,7 +125,6 @@ class Puzzle extends React.Component {
 
         let low = 0;
         let high = array.length - 1;
-        // let high = numOfPieces - 1;
         let pivotIdx = -1;
 
         // initial call to quicksort
@@ -129,6 +144,7 @@ class Puzzle extends React.Component {
 
             let position = low - 1;
 
+            // loop through all elements and do comparision to the pivot
             for (let i = low; i <= high - 1; i++) {
                 if (array[i] < pivot) {
                     position++;
@@ -138,6 +154,7 @@ class Puzzle extends React.Component {
                 }
             }
 
+            // find the right location for the pivot
             [array[high], array[position + 1]] = [array[position + 1], array[high]];
 
             return position + 1;
@@ -167,18 +184,16 @@ class Puzzle extends React.Component {
             
         };
 
-        // animate function
+        // draws current state of puzzle based on partially sorted array
         function drawCurrentPuzzle() {
             let x, y, newX, newY;
 
-            // for (let i = 0; i < numOfPieces; i++) {
-            for (let i = 0; i < 16; i++) {
-                x = (array[i] * 64) % width;
-                y = Math.floor((array[i] * 64) / width) * 64;
+            for (let i = 0; i < numOfPieces; i++) {
+                x = (array[i] * sizeOfPiece) % width;
+                y = Math.floor((array[i] * sizeOfPiece) / width) * sizeOfPiece;
     
-                newX = (i * 64) % width;
-                // newY = i / width;
-                newY = Math.floor((i * 64) / width) * 64;
+                newX = (i * sizeOfPiece) % width;
+                newY = Math.floor((i * sizeOfPiece) / width) * sizeOfPiece;
 
                 var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
                 ctx2.putImageData(imgData, newX, newY);
@@ -186,24 +201,25 @@ class Puzzle extends React.Component {
             
         }
 
-        // console.log(array);
-
     };
 
     render() {
         return (
             <div className="container">
-                <button className="btn btn-light" onClick={this.handleDisplay}>Display</button>
-                <button className="btn btn-danger" onClick={this.handleShuffle}>Shuffle</button>
-                <button className="btn btn-info" onClick={this.handleSort}>Sort</button>
+                <button id="displayBtn" className="btn btn-light" onClick={this.handleDisplay}>Display</button>
+                <button id="shuffleBtn" className="btn btn-danger" onClick={this.handleShuffle} 
+                    disabled={this.state.shuffleDisabled}>Shuffle</button>
+                <button id="sortBtn" className="btn btn-info" onClick={this.handleSort} 
+                    disabled={this.state.sortDisabled}>Sort</button>
                 
-                <li>Dimension: {this.state.width} x {this.state.height}</li>
+                <li>Scaled Dimension: {this.state.width} x {this.state.height}</li>
+                <li>Size of a single piece: {this.state.sizeOfPiece} x {this.state.sizeOfPiece}</li>
                 <li>Number of Pieces: {this.state.numOfPieces}</li>
                 <div className="canvas-container">
-                    <canvas id="myCanvas2" width="500" height="500" 
+                    <canvas id="myCanvas2" width="512" height="512" 
                             style={{border: '2px solid #000',
                                     backgroundColor: 'white'}}></canvas> 
-                    <canvas id="myCanvas" width="500" height="500" 
+                    <canvas id="myCanvas" width="512" height="512" 
                         style={{border: '2px solid #000',
                                 backgroundColor: 'white'}}></canvas>
                           
