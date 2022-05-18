@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/puzzle-sort-visualized/static/css/main.6e44c6ab.css",
-    "main.js": "/puzzle-sort-visualized/static/js/main.dbf70ae7.js",
+    "main.js": "/puzzle-sort-visualized/static/js/main.43d14b87.js",
     "static/js/787.fb8b7ad7.chunk.js": "/puzzle-sort-visualized/static/js/787.fb8b7ad7.chunk.js",
-    "static/media/nature.jpg": "/puzzle-sort-visualized/static/media/nature.3f806bafd40584c542d0.jpg",
+    "static/media/image.jpg": "/puzzle-sort-visualized/static/media/image.1d91feecf0fe579f482e.jpg",
     "index.html": "/puzzle-sort-visualized/index.html",
     "main.6e44c6ab.css.map": "/puzzle-sort-visualized/static/css/main.6e44c6ab.css.map",
-    "main.dbf70ae7.js.map": "/puzzle-sort-visualized/static/js/main.dbf70ae7.js.map",
+    "main.43d14b87.js.map": "/puzzle-sort-visualized/static/js/main.43d14b87.js.map",
     "787.fb8b7ad7.chunk.js.map": "/puzzle-sort-visualized/static/js/787.fb8b7ad7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6e44c6ab.css",
-    "static/js/main.dbf70ae7.js"
+    "static/js/main.43d14b87.js"
   ]
 }
