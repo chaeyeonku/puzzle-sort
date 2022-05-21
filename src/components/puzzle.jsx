@@ -7,8 +7,8 @@ class Puzzle extends React.Component {
         width: 0,
         height: 0,
         numOfPieces: 0,
-        sizeofPiece: 64,
-        level: 1,
+        sizeOfPiece: 64,
+        level: 2,
         shuffleDisabled: true,
         sortDisabled: true,
         upDisabled: true,
@@ -25,23 +25,28 @@ class Puzzle extends React.Component {
     handleUp = () => {
         // width/height of a puzzle piece (in pixels) for each level
         // index corresponds to the level (e.g. level 0-3)
-        let levels = [32, 64, 128, 256];
+        let levels = [16, 32, 64, 128, 256];
 
+        // get current puzzle level
         let currentLevel = this.state.level;
 
-        if (currentLevel < 3) {
+        // increment currentLevel
+        if (currentLevel < 5) {
             currentLevel++;
         }
 
-        // calculate new total number of pieces
+        // calculate the new total number of pieces
         let totalPieces = Math.pow((512 / levels[currentLevel]), 2);
 
+        // update to new state
         this.setState(
-            {level: currentLevel, sizeOfPiece: levels[currentLevel], numOfPieces: totalPieces}
+            {level: currentLevel, 
+            sizeOfPiece: levels[currentLevel], 
+            numOfPieces: totalPieces}
         );
 
-        // disable/enable up/down buttons if necessary
-        if (currentLevel === 3) {
+        // disable/enable UP/DOWN buttons if necessary
+        if (currentLevel === 5) {
             this.setState({upDisabled: true});
         } else {
             this.setState({upDisabled: false, downDisabled: false});
@@ -53,22 +58,27 @@ class Puzzle extends React.Component {
     handleDown = () => {
         // width/height of a puzzle piece (in pixels) for each level
         // index corresponds to the level (e.g. level 0-3)
-        let levels = [32, 64, 128, 256];
+        let levels = [16, 32, 64, 128, 256];
 
+        // get current puzzle level
         let currentLevel = this.state.level;
 
+        // decrement currentLevel
         if (currentLevel > 0) {
             currentLevel--;
         }
 
-        // calculate new total number of pieces
+        // calculate the new total number of pieces
         let totalPieces = Math.pow((512 / levels[currentLevel]), 2);
 
+        // update to new state
         this.setState(
-            {level: currentLevel, sizeOfPiece: levels[currentLevel], numOfPieces: totalPieces}
+            {level: currentLevel, 
+            sizeOfPiece: levels[currentLevel], 
+            numOfPieces: totalPieces}
         );
 
-        // disable/enable up/down buttons if necessary
+        // disable/enable UP/DOWN buttons if necessary
         if (currentLevel === 0) {
             this.setState({downDisabled: true});
         } else {
@@ -84,7 +94,6 @@ class Puzzle extends React.Component {
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         var img = new Image();
-        // img.src = "https://picsum.photos/200/300";
         img.src = require("../images/image.jpg");
 
         // wait for the image to load first
@@ -94,16 +103,14 @@ class Puzzle extends React.Component {
             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 512, 512);
 
             // initialize puzzle information
-            this.setState(
-                {width: 512, height: 512, sizeOfPiece: 64}
-            );
+            this.setState({width: 512, height: 512, sizeOfPiece: 64});
 
             // set number of pieces
             let totalPieces = Math.pow((512 / 64), 2);
             this.setState({numOfPieces: totalPieces});
         };
 
-        // enable shuffle button
+        // enable other buttons
         this.setState({shuffleDisabled: false, upDisabled: false, downDisabled: false});
 
     };
@@ -122,9 +129,8 @@ class Puzzle extends React.Component {
 
         let initialArray = [];
 
-        // create an array of number from 0 - numOfPieces - 1
+        // create an array of number from 0 to numOfPieces - 1
         for (let i = 0; i < numOfPieces; i++) {
-        // for (let i = 0; i < 16; i++) {
             initialArray[i] = i;
         }
 
@@ -136,18 +142,21 @@ class Puzzle extends React.Component {
 
         console.log(initialArray);
 
+        // get canvas elements and contexts
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         let c2 = document.getElementById("myCanvas2");
         let ctx2 = c2.getContext("2d");
 
+        // variables for x,y coordinates
         let x, y, newX, newY;
 
-        // animated shuffle
+        // initialize variables for shuffled display
         let count = 0;
-        // let max = this.state.numOfPieces;
         let width = this.state.width;
         const id = setInterval(drawPiece, 10);
+
+        // helper for updating each row of shuffled puzzle
         function drawPiece() {
             if ( count < numOfPieces ) {
                 for (let i = 0; i < width / sizeOfPiece; i++) {
@@ -186,35 +195,21 @@ class Puzzle extends React.Component {
         let width = this.state.width;
         let numOfPieces = this.state.numOfPieces;
 
+        // get canvas elements and their contexts
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         let c2 = document.getElementById("myCanvas2");
         let ctx2 = c2.getContext("2d");
 
-        // create an arbitray sorted array for comparison
-        let sortedArray = [];
-
-        // create an array of number from 0 - numOfPieces - 1
-        for (let i = 0; i < numOfPieces; i++) {
-        // for (let i = 0; i < 16; i++) {
-            sortedArray[i] = i;
-        }
-
         let low = 0;
         let high = array.length - 1;
-        let pivotIdx = -1;
 
-        // initial call to quicksort
-        quicksort(array, low, high);
+        // initial call to iterative quicksort
+        itrQuickSort(array, low, high);
 
-        // helper handling recursive calls to quicksort
-        function recursiveQuickSort() {
-            quicksort(array, low, pivotIdx - 1)
-            .then( () => {
-                quicksort(array, pivotIdx + 1, high)
-            });
-        }
-
+        /** Adapted from GeeksForGeeks - Iterative Quick Sort
+         * https://www.geeksforgeeks.org/iterative-quick-sort/ 
+         * */ 
         // helper that picks a pivot and sorts other elements
         function partition(array, low, high) {
             let pivot = array[high];
@@ -237,40 +232,55 @@ class Puzzle extends React.Component {
             return position + 1;
         }
 
-        // do quicksort
-        function quicksort(array, low, high) {
-
-            return new Promise((resolve) => {
-                if (low < high) {
-
-                    // partition the array and get pivot index
-                    pivotIdx = partition(array, low, high);
-    
-                    // update canvas first
-                    drawCurrentPuzzle();
-
-                    // do recursive calls to quicksort
-                    window.requestAnimationFrame(recursiveQuickSort);
-    
-                } else {
-                    // resolve the promise since there's nothing left to sort
-                    resolve();
-
-                    // check if the puzzle has been completely sorted
-                    if (JSON.stringify(sortedArray) === JSON.stringify(array)) {
-
-                        // wait for 5 seconds and call reset
-                        window.setTimeout(function() {
-                            window.location.reload();
-                        }, 5000);
-
+        /** Adapted from GeeksForGeeks - Iterative Quick Sort
+         * https://www.geeksforgeeks.org/iterative-quick-sort/ 
+         * */ 
+        function itrQuickSort(array, low, high) {
+            // create a stack array
+            let stack = new Array(high - low + 1);
+            stack.fill(0);
+      
+            // initialize top of stack
+            let top = -1;
+      
+            // push initial values of low and high to stack
+            stack[++top] = low;
+            stack[++top] = high;
+      
+            // qs loop that will keep popping from stack until it's empty
+            function qsLoop() {
+                if (top >= 0) {
+                    // Pop high and low
+                    high = stack[top--];
+                    low = stack[top--];
+        
+                    // move pivot element to correct index
+                    let p = partition(array, low, high);
+        
+                    // If there are elements on left side of pivot,
+                    // then push left side to stack
+                    if (p - 1 > low) {
+                        stack[++top] = low;
+                        stack[++top] = p - 1;
+                    }
+        
+                    // If there are elements on right side of pivot,
+                    // then push right side to stack
+                    if (p + 1 < high) {
+                        stack[++top] = p + 1;
+                        stack[++top] = high;
                     }
 
+                    // update the canvas before starting next iteration
+                    drawCurrentPuzzle();
+                    window.requestAnimationFrame(qsLoop);
                 }
-            });
+            }
 
-            
-        };
+            // initial call to quicksort Loop
+            qsLoop();
+        
+        }
 
         // draws current state of puzzle based on partially sorted array
         function drawCurrentPuzzle() {
@@ -324,9 +334,7 @@ class Puzzle extends React.Component {
                 
             </div>
         );
-    }
-
-    
+    }  
 }
 
 export default Puzzle;
