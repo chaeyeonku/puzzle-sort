@@ -47,6 +47,16 @@ canvas {
   justify-content: center;
 }
 
+label {
+  font-weight: bold;
+  color:aquamarine;
+  margin-right: 3px;
+}
+
+.upDown {
+  border-radius: 50%;
+}
+
 
 @keyframes App-logo-spin {
   from {

@@ -2,14 +2,79 @@ import React from 'react';
 import '../App.css';
 
 class Puzzle extends React.Component {
+
     state = {
         width: 0,
         height: 0,
         numOfPieces: 0,
-        sizeofPiece: 0,
+        sizeofPiece: 64,
+        level: 1,
         shuffleDisabled: true,
         sortDisabled: true,
+        upDisabled: true,
+        downDisabled: true,
         array: []
+    };
+
+    /** Resets the state by reloading window */
+    handleReset = () => {
+        window.location.reload();
+    };
+
+    /** Increases the size of a puzzle piece */
+    handleUp = () => {
+        // width/height of a puzzle piece (in pixels) for each level
+        // index corresponds to the level (e.g. level 0-3)
+        let levels = [32, 64, 128, 256];
+
+        let currentLevel = this.state.level;
+
+        if (currentLevel < 3) {
+            currentLevel++;
+        }
+
+        // calculate new total number of pieces
+        let totalPieces = Math.pow((512 / levels[currentLevel]), 2);
+
+        this.setState(
+            {level: currentLevel, sizeOfPiece: levels[currentLevel], numOfPieces: totalPieces}
+        );
+
+        // disable/enable up/down buttons if necessary
+        if (currentLevel === 3) {
+            this.setState({upDisabled: true});
+        } else {
+            this.setState({upDisabled: false, downDisabled: false});
+        }
+        
+    };
+
+    /** Decreases the size of a puzzle piece */
+    handleDown = () => {
+        // width/height of a puzzle piece (in pixels) for each level
+        // index corresponds to the level (e.g. level 0-3)
+        let levels = [32, 64, 128, 256];
+
+        let currentLevel = this.state.level;
+
+        if (currentLevel > 0) {
+            currentLevel--;
+        }
+
+        // calculate new total number of pieces
+        let totalPieces = Math.pow((512 / levels[currentLevel]), 2);
+
+        this.setState(
+            {level: currentLevel, sizeOfPiece: levels[currentLevel], numOfPieces: totalPieces}
+        );
+
+        // disable/enable up/down buttons if necessary
+        if (currentLevel === 0) {
+            this.setState({downDisabled: true});
+        } else {
+            this.setState({upDisabled: false, downDisabled: false});
+        }
+        
     };
 
     /**  Puts the original image on the canvas */
@@ -39,7 +104,7 @@ class Puzzle extends React.Component {
         };
 
         // enable shuffle button
-        this.setState({shuffleDisabled: false});
+        this.setState({shuffleDisabled: false, upDisabled: false, downDisabled: false});
 
     };
 
@@ -112,6 +177,9 @@ class Puzzle extends React.Component {
     handleSort = () => {
         console.log("Clicked Sort");
 
+        // disable shuffle & sort button
+        this.setState({shuffleDisabled: true, sortDisabled: true});
+
         // get puzzle details
         let sizeOfPiece = this.state.sizeOfPiece;
         let array = this.state.array;
@@ -122,6 +190,15 @@ class Puzzle extends React.Component {
         let ctx = c.getContext("2d");
         let c2 = document.getElementById("myCanvas2");
         let ctx2 = c2.getContext("2d");
+
+        // create an arbitray sorted array for comparison
+        let sortedArray = [];
+
+        // create an array of number from 0 - numOfPieces - 1
+        for (let i = 0; i < numOfPieces; i++) {
+        // for (let i = 0; i < 16; i++) {
+            sortedArray[i] = i;
+        }
 
         let low = 0;
         let high = array.length - 1;
@@ -178,6 +255,17 @@ class Puzzle extends React.Component {
                 } else {
                     // resolve the promise since there's nothing left to sort
                     resolve();
+
+                    // check if the puzzle has been completely sorted
+                    if (JSON.stringify(sortedArray) === JSON.stringify(array)) {
+
+                        // wait for 5 seconds and call reset
+                        window.setTimeout(function() {
+                            window.location.reload();
+                        }, 5000);
+
+                    }
+
                 }
             });
 
@@ -211,6 +299,15 @@ class Puzzle extends React.Component {
                     disabled={this.state.shuffleDisabled}>Shuffle</button>
                 <button id="sortBtn" className="btn btn-info" onClick={this.handleSort} 
                     disabled={this.state.sortDisabled}>Sort</button>
+                <button id="resetBtn" className="btn btn-secondary" onClick={this.handleReset}>Reset</button>
+
+                <div className="upDownContainer">
+                    <label>Change puzzle piece size: </label>
+                    <button id="up" className="upDown" onClick={this.handleUp} 
+                        disabled={this.state.upDisabled}>▲</button>
+                    <button id="down" className="upDown" onClick={this.handleDown} 
+                        disabled={this.state.downDisabled}>▼</button>
+                </div>
                 
                 <li>Scaled Dimension: {this.state.width} x {this.state.height}</li>
                 <li>Size of a single piece: {this.state.sizeOfPiece} x {this.state.sizeOfPiece}</li>
