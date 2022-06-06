@@ -7,11 +7,12 @@ class Puzzle extends React.Component {
         width: 0,
         height: 0,
         numOfPieces: 0,
-        sizeOfPiece: 64,
-        level: 2,
+        sizeOfPiece: 16,
+        level: 0,
+        displayDisabled: false,
         shuffleDisabled: true,
         sortDisabled: true,
-        upDisabled: true,
+        upDisabled: false,
         downDisabled: true,
         array: []
     };
@@ -91,6 +92,7 @@ class Puzzle extends React.Component {
     handleDisplay = () => {
         console.log("Clicked Display");
 
+        let size = this.state.sizeOfPiece;
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         var img = new Image();
@@ -103,15 +105,24 @@ class Puzzle extends React.Component {
             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 512, 512);
 
             // initialize puzzle information
-            this.setState({width: 512, height: 512, sizeOfPiece: 64});
+            this.setState({width: 512, height: 512});
 
             // set number of pieces
-            let totalPieces = Math.pow((512 / 64), 2);
+            let totalPieces = Math.pow((512 / size), 2);
             this.setState({numOfPieces: totalPieces});
+
+            // draw borders around each puzzle piece
+            let width = img.width;
+            for (let i=0; i < width; i += size) {
+                for (let j = 0; j < width; j += size) {
+                    ctx.strokeRect(i, j, size, size);
+                }
+            }
         };
 
-        // enable other buttons
-        this.setState({shuffleDisabled: false, upDisabled: false, downDisabled: false});
+        // disable UP/DOWN & DISPLAY buttons and enable SHUFFLE
+        this.setState({shuffleDisabled: false, displayDisabled: true,
+            upDisabled: true, downDisabled: true});
 
     };
 
@@ -272,7 +283,7 @@ class Puzzle extends React.Component {
                     }
 
                     // update the canvas before starting next iteration
-                    drawCurrentPuzzle();
+                    drawCurrentPuzzle(p);
                     window.requestAnimationFrame(qsLoop);
                 }
             }
@@ -283,7 +294,8 @@ class Puzzle extends React.Component {
         }
 
         // draws current state of puzzle based on partially sorted array
-        function drawCurrentPuzzle() {
+        function drawCurrentPuzzle(pivotIdx) {
+
             let x, y, newX, newY;
 
             for (let i = 0; i < numOfPieces; i++) {
@@ -295,8 +307,14 @@ class Puzzle extends React.Component {
 
                 var imgData = ctx.getImageData(x, y, sizeOfPiece, sizeOfPiece);
                 ctx2.putImageData(imgData, newX, newY);
+
+                // draw a borderline around the current pivot piece
+                if (i === pivotIdx) {
+                    ctx2.strokeStyle = '#3333ff';
+                    ctx2.lineWidth = 5;
+                    ctx2.strokeRect(x, y, sizeOfPiece, sizeOfPiece);
+                }
             }
-            
         }
 
     };
@@ -304,7 +322,8 @@ class Puzzle extends React.Component {
     render() {
         return (
             <div className="container">
-                <button id="displayBtn" className="btn btn-light" onClick={this.handleDisplay}>Display</button>
+                <button id="displayBtn" className="btn btn-light" onClick={this.handleDisplay}
+                    disabled={this.state.displayDisabled}>Display</button>
                 <button id="shuffleBtn" className="btn btn-danger" onClick={this.handleShuffle} 
                     disabled={this.state.shuffleDisabled}>Shuffle</button>
                 <button id="sortBtn" className="btn btn-info" onClick={this.handleSort} 
@@ -318,10 +337,7 @@ class Puzzle extends React.Component {
                     <button id="down" className="upDown" onClick={this.handleDown} 
                         disabled={this.state.downDisabled}>▼</button>
                 </div>
-                
-                <li>Scaled Dimension: {this.state.width} x {this.state.height}</li>
-                <li>Size of a single piece: {this.state.sizeOfPiece} x {this.state.sizeOfPiece}</li>
-                <li>Number of Pieces: {this.state.numOfPieces}</li>
+                <div>Single piece size: {this.state.sizeOfPiece} px</div>
                 <div className="canvas-container">
                     <canvas id="myCanvas2" width="512" height="512" 
                             style={{border: '2px solid #000',
