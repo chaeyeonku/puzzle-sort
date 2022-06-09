@@ -322,13 +322,15 @@ class Puzzle extends React.Component {
     render() {
         return (
             <div className="container">
-                <button id="displayBtn" className="btn btn-light" onClick={this.handleDisplay}
-                    disabled={this.state.displayDisabled}>Display</button>
-                <button id="shuffleBtn" className="btn btn-danger" onClick={this.handleShuffle} 
-                    disabled={this.state.shuffleDisabled}>Shuffle</button>
-                <button id="sortBtn" className="btn btn-info" onClick={this.handleSort} 
-                    disabled={this.state.sortDisabled}>Sort</button>
-                <button id="resetBtn" className="btn btn-secondary" onClick={this.handleReset}>Reset</button>
+                <div className="buttons">
+                    <button id="displayBtn" className="btn btn-outline-light" onClick={this.handleDisplay}
+                        disabled={this.state.displayDisabled}>Display</button>
+                    <button id="shuffleBtn" className="btn btn-outline-danger" onClick={this.handleShuffle} 
+                        disabled={this.state.shuffleDisabled}>Shuffle</button>
+                    <button id="sortBtn" className="btn btn-outline-info" onClick={this.handleSort} 
+                        disabled={this.state.sortDisabled}>Sort</button>
+                    <button id="resetBtn" className="btn btn-outline-light" onClick={this.handleReset}>Reset</button>
+                </div>
 
                 <div className="upDownContainer">
                     <label>Change puzzle piece size: </label>
