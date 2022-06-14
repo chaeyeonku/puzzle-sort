@@ -1,9 +1,6 @@
 .App {
   text-align: center;
   font-family: "Verdana";
-}
-
-.App-header {
   background-color: #1a1a1a;
   min-height: 100vh;
   display: flex;
@@ -13,13 +10,19 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 .puzzle-container {
   display: flex;
   
+}
+
+#pictureContainer {
+  max-width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#puzzle-hide {
+  display: none;
 }
 
 .container {

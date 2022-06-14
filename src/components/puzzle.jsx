@@ -92,11 +92,17 @@ class Puzzle extends React.Component {
     handleDisplay = () => {
         console.log("Clicked Display");
 
+        // retrieve imageNumber
+        let imgNum = this.props.getImg();
+
+        console.log(imgNum);
+
         let size = this.state.sizeOfPiece;
         let c = document.getElementById("myCanvas");
         let ctx = c.getContext("2d");
         var img = new Image();
-        img.src = require("../images/image.jpg");
+        img.src = require(`../pics/${imgNum}.JPG`);
+        // img.src = require("../images/image.jpg");
 
         // wait for the image to load first
         img.onload = () => {
