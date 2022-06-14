@@ -1,16 +1,25 @@
 {
   "files": {
-    "main.css": "/puzzle-sort-visualized/static/css/main.da044c0e.css",
-    "main.js": "/puzzle-sort-visualized/static/js/main.e06f64be.js",
+    "main.css": "/puzzle-sort-visualized/static/css/main.ec1201f0.css",
+    "main.js": "/puzzle-sort-visualized/static/js/main.87311d65.js",
     "static/js/787.fb8b7ad7.chunk.js": "/puzzle-sort-visualized/static/js/787.fb8b7ad7.chunk.js",
-    "static/media/image.jpg": "/puzzle-sort-visualized/static/media/image.1d91feecf0fe579f482e.jpg",
+    "static/media/10.JPG": "/puzzle-sort-visualized/static/media/10.4e839d54794e9f26efb5.JPG",
+    "static/media/6.JPG": "/puzzle-sort-visualized/static/media/6.7023c38044cfbc8b1aea.JPG",
+    "static/media/4.JPG": "/puzzle-sort-visualized/static/media/4.91065f550b0c97049168.JPG",
+    "static/media/5.JPG": "/puzzle-sort-visualized/static/media/5.359b8549034e2ce8953a.JPG",
+    "static/media/1.JPG": "/puzzle-sort-visualized/static/media/1.756a8d8b1ffeb54e9802.JPG",
+    "static/media/2.JPG": "/puzzle-sort-visualized/static/media/2.1898c4a204bff9994448.JPG",
+    "static/media/3.JPG": "/puzzle-sort-visualized/static/media/3.796727e6f69086f96376.JPG",
+    "static/media/9.JPG": "/puzzle-sort-visualized/static/media/9.b42ecf93511ad899f152.JPG",
+    "static/media/8.JPG": "/puzzle-sort-visualized/static/media/8.65592eda5b7f6dc4c9cd.JPG",
+    "static/media/7.JPG": "/puzzle-sort-visualized/static/media/7.abd1ecd3a827299fa7c3.JPG",
     "index.html": "/puzzle-sort-visualized/index.html",
-    "main.da044c0e.css.map": "/puzzle-sort-visualized/static/css/main.da044c0e.css.map",
-    "main.e06f64be.js.map": "/puzzle-sort-visualized/static/js/main.e06f64be.js.map",
+    "main.ec1201f0.css.map": "/puzzle-sort-visualized/static/css/main.ec1201f0.css.map",
+    "main.87311d65.js.map": "/puzzle-sort-visualized/static/js/main.87311d65.js.map",
     "787.fb8b7ad7.chunk.js.map": "/puzzle-sort-visualized/static/js/787.fb8b7ad7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.da044c0e.css",
-    "static/js/main.e06f64be.js"
+    "static/css/main.ec1201f0.css",
+    "static/js/main.87311d65.js"
   ]
 }
