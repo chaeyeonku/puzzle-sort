@@ -2,6 +2,7 @@ import './App.css';
 import Puzzle from './components/puzzle';
 import Picture from './components/picture';
 import React from 'react';
+import Button from '@mui/material/Button';
 
 class App extends React.Component {
 
@@ -15,17 +16,15 @@ class App extends React.Component {
     };
 
     handleClick = picture  => {
-        console.log(picture.id, "image clicked");
         this.setState({chooseBtnDisabled: false, imgNum: picture.id});
     }
 
     handleShowPuzzle = () => {
+        this.setState({chooseBtnDisabled: true});
         let picContainer = document.getElementById("pictureContainer");
         let puzzle = document.getElementById("puzzle-hide");
-        let chooseBtn = document.getElementById("chooseBtn");
         picContainer.style.display = "none";
         puzzle.style.display = "flex";
-        chooseBtn.style.display = "none";
     }
 
     handleDisplayImage = () => {
@@ -43,9 +42,11 @@ class App extends React.Component {
                         onClick={this.handleClick} />
                 )}
             </div>
-            <button id="chooseBtn" className="btn btn-outline-light" 
-                onClick={this.handleShowPuzzle}
-                disabled={this.state.chooseBtnDisabled}>Choose</button>
+            <Button variant="contained" color="success"
+                    onClick={() => this.handleShowPuzzle()}
+                    disabled={this.state.chooseBtnDisabled}>
+                SELECT
+            </Button>
             <div id="puzzle-hide">
                 <Puzzle getImg={this.handleDisplayImage} />
             </div>

@@ -90,8 +90,6 @@ class Puzzle extends React.Component {
 
     /**  Puts the original image on the canvas */
     handleDisplay = () => {
-        console.log("Clicked Display");
-
         // retrieve imageNumber
         let imgNum = this.props.getImg();
 
@@ -134,8 +132,6 @@ class Puzzle extends React.Component {
 
     /** Shuffles the picture puzzle */
     handleShuffle = () => {
-        console.log("Clicked Shuffle");
-
         // get puzzle details
         let numOfPieces = this.state.numOfPieces;
         let sizeOfPiece = this.state.sizeOfPiece;
@@ -201,8 +197,6 @@ class Puzzle extends React.Component {
 
     /** Quicksorts the picture puzzle */
     handleSort = () => {
-        console.log("Clicked Sort");
-
         // disable shuffle & sort button
         this.setState({shuffleDisabled: true, sortDisabled: true});
 

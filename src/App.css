@@ -60,3 +60,6 @@ label {
   border-radius: 50%;
 }
 
+.Button:focus {
+  background-color: #aa16af;
+}
